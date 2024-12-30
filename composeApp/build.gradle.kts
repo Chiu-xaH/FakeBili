@@ -48,9 +48,9 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.androidx.lifecycle.livedata.core.ktx)
-
-//            implementation(libs.ktor.client.cio)
-//            implementation(libs.ktor.client.okhttp)
+            //图片库
+//            implementation(libs.kamel.image)
+            api(libs.image.loader)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

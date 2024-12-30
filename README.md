@@ -1,10 +1,12 @@
 # FakeBili
 ## 说明
 Kotlin跨平台+Ktor框架入门练习
+## 截图
+![图片1](img/example.png)
 ## 平台
 Win、Android
 
-无iOS（由于无MacOS环境）
+无iOS（由于无MacOS环境）（不共享UI）
 ## 功能
 本人练手用，简单用Ktor实现检索哔哩哔哩视频，点击跳转浏览器播放
 ## 入门心得
@@ -19,6 +21,10 @@ Win、Android
 我习惯android开发，开发网络层时也参考android开发分层的思路，不知道对不对...
 
 shared文件夹没改动，应该是共享给iOS用的，没苹果本子搞不来
+## 依赖
+[Ktor](https://github.com/ktorio/ktor)
+
+[Compose ImageLoader](https://github.com/qdsfdhvh/compose-imageloader)
 
 ## Other
 This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.

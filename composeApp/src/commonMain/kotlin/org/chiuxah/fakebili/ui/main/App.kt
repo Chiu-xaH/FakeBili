@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+//import io.kamel.image.KamelImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -46,6 +47,12 @@ import org.chiuxah.fakebili.logic.network.bean.SearchBean
 import org.chiuxah.fakebili.logic.utils.MultiPlatUtils
 import org.chiuxah.fakebili.ui.utils.RowHorizal
 import org.chiuxah.fakebili.viewmodel.NetworkViewModel
+import androidx.compose.runtime.*
+import androidx.compose.foundation.Image
+import com.seiko.imageloader.rememberImagePainter
+
+//import io.kamel.image.KamelImage
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,6 +189,16 @@ fun App() {
                                                 },
                                                 modifier = Modifier.clickable {
                                                     MultiPlatUtils().startUrl(item.arcurl)
+                                                },
+                                                leadingContent = {
+                                                    val painter = item.imgUrl?.let { rememberImagePainter("https:$it") }
+                                                    painter?.let {
+                                                        Image(
+                                                            painter = it,
+                                                            contentDescription = null,
+                                                            modifier = Modifier.size(120.dp)
+                                                        )
+                                                    }
                                                 }
                                             )
                                             Divider()
@@ -228,6 +245,5 @@ fun getSearchList(networkViewModel: NetworkViewModel): List<SearchBean> {
         // 捕获异常（如果有的话），可以进行日志记录或其他操作
         e.printStackTrace()
     }
-
     return data
 }
