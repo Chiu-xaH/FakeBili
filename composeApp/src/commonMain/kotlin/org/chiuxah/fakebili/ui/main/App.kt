@@ -50,6 +50,7 @@ import org.chiuxah.fakebili.viewmodel.NetworkViewModel
 import androidx.compose.runtime.*
 import androidx.compose.foundation.Image
 import com.seiko.imageloader.rememberImagePainter
+import org.chiuxah.fakebili.logic.network.bean.SearchResponse
 
 //import io.kamel.image.KamelImage
 
@@ -75,7 +76,7 @@ fun App() {
 
 
     val networkViewModel = remember { NetworkViewModel() }
-
+    val searchState by networkViewModel.searchState.collectAsState()
     LaunchedEffect(Unit) {
         launch {
             async { networkViewModel.fetchBiliTicket() }.await()
@@ -144,30 +145,49 @@ fun App() {
                             if(expanded && queryStr != "") {
 
                                 //先显示加载，执行网络请求，然后解析，解析好后在这里显示
-                                LaunchedEffect(Unit) {
-                                    launch {
-                                        async {
-                                            loading = true
-                                            networkViewModel.searchVideos(queryStr)
-                                        }.await()
-                                        async {
-                                            launch(Dispatchers.Main) {
-                                                networkViewModel.searchState.collect { result ->
-                                                    when(result) {
-                                                        is ApiResult.Success -> {
-                                                            val resList = result.data.data.result
-                                                            networkViewModel.videoSearchList =  resList.last().data
-                                                            loading = false
-                                                        }
-                                                        is ApiResult.Error -> {
-                                                            println("错误")
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+//                                LaunchedEffect(Unit) {
+//                                    launch {
+//                                        async {
+//                                            loading = true
+//                                            networkViewModel.searchVideos(queryStr)
+//                                        }.await()
+//                                        async {
+//                                            launch(Dispatchers.Main) {
+//                                                networkViewModel.searchState.collect { result ->
+//                                                    when(result) {
+//                                                        is ApiResult.Success -> {
+//                                                            val resList = result.data.data.result
+//                                                            networkViewModel.videoSearchList =  resList.last().data
+//                                                            loading = false
+//                                                        }
+//                                                        is ApiResult.Error -> {
+//                                                            println("错误")
+//                                                        }
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+                                LaunchedEffect(queryStr) {
+                                    loading = true
+                                    networkViewModel.searchVideos(queryStr)
+                                }
+                                when (searchState) {
+                                    is ApiResult.Success -> {
+                                        val resList = (searchState as ApiResult.Success<SearchResponse>).data.data.result
+                                        networkViewModel.videoSearchList = resList.last().data
+                                        loading = false
+                                    }
+                                    is ApiResult.Error -> {
+                                        println("错误")
+                                        loading = false
+                                    }
+                                    else -> {
+                                        // Idle 或加载中状态
                                     }
                                 }
+
                                 if(loading) {
                                     Box(modifier = Modifier.fillMaxSize()) {
                                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

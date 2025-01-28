@@ -33,7 +33,11 @@ class NetworkViewModel : ViewModel() {
 
     fun searchVideos(query: String,page: Int = 1,pageSize: Int = 42) {
         viewModelScope.launch {
-            _searchState.value = biliApi.searchVideos(query,ticket,page,pageSize)
+            _searchState.value = try {
+                biliApi.searchVideos(query, ticket, page, pageSize)
+            } catch (e: Exception) {
+                ApiResult.Error(e)
+            }
         }
     }
 }
